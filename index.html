@@ -1,8 +1,10 @@
 <!doctype html>
-<html lang="ru">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ветви — атлас данных</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="ru" data-theme="dark">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>/* Восстанавливает выбранную тему до отображения страницы. */
+try{const savedTheme=localStorage.getItem("hierarchy-theme");if(savedTheme==="light"||savedTheme==="dark")document.documentElement.dataset.theme=savedTheme;}catch{}
+</script><title>Ветви — атлас данных</title><link rel="stylesheet" href="styles.css"></head>
 <body>
-<header><a class="brand" href="./index.html" aria-label="Ветви — главная"><span class="brand-icon">⑂</span> ветви<span class="brand-note">атлас данных</span></a><div class="header-actions"><button id="demo">Пример</button><button id="export">Скачать JSON</button><button class="primary" id="import">Загрузить данные <span>↗</span></button></div></header>
+<header><a class="brand" href="./index.html" aria-label="Ветви — главная"><span class="brand-icon">⑂</span> ветви<span class="brand-note">атлас данных</span></a><div class="header-actions"><button id="theme" type="button" aria-label="Переключить цветовую тему">Светлая тема</button><button id="demo">Пример</button><button id="export">Скачать JSON</button><button class="primary" id="import">Загрузить данные <span>↗</span></button></div></header>
 <main><section class="workspace"><div class="intro"><div><p class="eyebrow">От общего к частному</p><h1>У данных есть структура.</h1><p class="subtitle">Исследуйте связи. Раскрывайте детали.</p></div><div class="summary"><strong id="total">0</strong><span>узлов в структуре</span></div></div>
 <div class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Найти узел…" aria-label="Поиск узлов"><kbd>/</kbd></label><span id="results" role="status" aria-live="polite"></span><button id="expand">Раскрыть всё</button><button id="collapse">Свернуть</button></div>
 <div class="map-frame"><div id="viewport" tabindex="0" aria-label="Карта иерархии. Прокрутите для просмотра"><svg id="map" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Дерево данных"></svg></div><div class="map-caption"><span class="live-dot"></span> Карта связей <span class="hint">Нажмите на узел, чтобы изучить его</span></div><div class="zoom"><button id="minus" aria-label="Уменьшить масштаб">−</button><output id="scale">100%</output><button id="plus" aria-label="Увеличить масштаб">+</button><button id="fit" aria-label="Показать всё дерево" title="Показать всё">⛶</button></div></div>

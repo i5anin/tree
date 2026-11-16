@@ -1,6 +1,8 @@
 /** Находит элемент интерфейса по его ID для обработчиков приложения. */
 const $ = (id) => document.getElementById(id);
-const palette = [ ['#2c71c7','#edf4ff'], ['#208573','#eaf7f1'], ['#9c6ac2','#f5effa'], ['#c17b27','#fff5e6'], ['#bd5d7d','#fff0f5'] ];
+const lightPalette = [ ['#2c71c7','#edf4ff'], ['#208573','#eaf7f1'], ['#9c6ac2','#f5effa'], ['#c17b27','#fff5e6'], ['#bd5d7d','#fff0f5'] ];
+const darkPalette = [ ['#83b7ff','#203652'], ['#76cdb8','#1b3c36'], ['#c5a0ef','#362a49'], ['#edbd79','#45351f'], ['#eea0bf','#452c3a'] ];
+let palette = document.documentElement.dataset.theme === 'dark' ? darkPalette : lightPalette;
 const demo = {name:'Орбита',description:'Пример структуры цифрового продукта: от направлений работы до отдельных компонентов.',children:[
  {name:'Продукт',description:'Всё, что помогает создавать полезный пользовательский опыт.',children:[{name:'Исследования',description:'Интервью, гипотезы и проверка потребностей.',children:[{name:'Интервью',value:12},{name:'Гипотезы',value:8}]},{name:'Дизайн',description:'Визуальная система и сценарии взаимодействия.',children:[{name:'Компоненты',value:42},{name:'Прототипы',value:6}]}]},
  {name:'Разработка',description:'Системы и инструменты, на которых работает продукт.',children:[{name:'Интерфейс',children:[{name:'Веб-приложение'},{name:'Мобильная версия'}]},{name:'Сервер',children:[{name:'API'},{name:'База данных'}]}]},
@@ -118,6 +120,17 @@ async function readFile(event) {
 function submitData(event) { event.preventDefault();try{const text=$('json').value;if(text.length>1_000_000)throw Error('JSON превышает 1 МБ.');let data;try{data=JSON.parse(text);}catch{throw Error('Некорректный JSON. Проверьте кавычки, запятые и скобки.');}load(data);$('editor').close();notify('Дерево построено');}catch(error){$('error').textContent=error.message;} }
 /** Скачивает переносимый JSON текущей структуры средствами браузера, без передачи данных на сервер. */
 function exportData() { const url=URL.createObjectURL(new Blob([JSON.stringify(serialize(tree),null,2)],{type:'application/json'}));const link=element('a');link.href=url;link.download='hierarchy.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('JSON подготовлен к скачиванию'); }
+/** Меняет тему карты и интерфейса; обработчик кнопки сохраняет выбор, если хранилище браузера доступно. */
+function setTheme(theme, persist=false) {
+ document.documentElement.dataset.theme=theme;
+ palette=theme==='dark'?darkPalette:lightPalette;
+ $('theme').textContent=theme==='dark'?'Светлая тема':'Тёмная тема';
+ $('theme').setAttribute('aria-label',theme==='dark'?'Включить светлую тему':'Включить тёмную тему');
+ if(persist){try{localStorage.setItem('hierarchy-theme',theme);}catch{}}
+ if(tree){render();details();}
+}
+$('theme').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark',true));
+setTheme(document.documentElement.dataset.theme);
 $('search').addEventListener('input',event=>{query=event.target.value.trim().toLocaleLowerCase('ru');render();});
 $('expand').addEventListener('click',()=>{collapsed.clear();render();fit();});
 $('collapse').addEventListener('click',()=>{query='';$('search').value='';collapsed=new Set(nodes.filter(n=>n.depth>0&&n.children.length).map(n=>n.id));render();fit();});
